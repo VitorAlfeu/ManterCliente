@@ -109,7 +109,7 @@ public class ClienteFacade implements IClienteFacade {
 		if (cliente.isPresent()) {
 			lstRetorno.add(new ClienteDTO.ToDTO().apply(cliente.get()));	
 		} else {
-			response.getErrors().add("Nenhum Usuário encontrado com o Id: " + id);	
+			response.getErrors().add("Nenhum Usuário encontrado com o Id: " + id);
 		}
 
 		response.setData(lstRetorno);

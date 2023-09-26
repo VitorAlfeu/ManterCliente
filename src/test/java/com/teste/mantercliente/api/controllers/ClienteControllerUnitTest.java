@@ -167,19 +167,19 @@ public class ClienteControllerUnitTest {
         Response<ClienteDTO> response = new Response<>();
         response.setData(new ArrayList<ClienteDTO>() {{ add(clienteDTO);}});
         
-        // Configurar o comportamento do mock da clienteFacade
+        // Configurando o comportamento do mock da clienteFacade
         when(facade.buscarClientePorNome(nome)).thenReturn(ResponseEntity.ok(response));
 
-        // Chamar o método da controller que você deseja testar
+        // Chamando o método da controller que você deseja testar
         ResponseEntity<Response<ClienteDTO>> responseEntity = controller.buscarClientePorNome(nome);
 
-        // Verificar se o status de resposta é OK (200)
+        // Verificando se o status de resposta é OK (200)
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        // Verificar se o corpo da resposta contém o clienteDTO esperado
+        // Verificando se o corpo da resposta contém o clienteDTO esperado
         assertEquals(response.getData(), responseEntity.getBody().getData());
 
-        // Verificar se o método do mock da clienteFacade foi chamado uma vez
+        // Verificando se o método do mock da clienteFacade foi chamado uma vez
         verify(facade, times(1)).buscarClientePorNome(nome);
     }
     
@@ -191,19 +191,19 @@ public class ClienteControllerUnitTest {
         Response<ClienteDTO> response = new Response<>();
         response.setData(new ArrayList<ClienteDTO>() {{ add(clienteDTO);}});
         
-        // Configurar o comportamento do mock da clienteFacade
+        // Configurando o comportamento do mock da clienteFacade
         when(facade.buscarClientePorRg(rg)).thenReturn(ResponseEntity.ok(response));
 
-        // Chamar o método da controller que você deseja testar
+        // Chamando o método da controller que você deseja testar
         ResponseEntity<Response<ClienteDTO>> responseEntity = controller.buscarClientePorRg(rg);
 
-        // Verificar se o status de resposta é OK (200)
+        // Verificando se o status de resposta é OK (200)
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        // Verificar se o corpo da resposta contém o clienteDTO esperado
+        // Verificando se o corpo da resposta contém o clienteDTO esperado
         assertEquals(response.getData(), responseEntity.getBody().getData());
 
-        // Verificar se o método do mock da clienteFacade foi chamado uma vez
+        // Verificando se o método do mock da clienteFacade foi chamado uma vez
         verify(facade, times(1)).buscarClientePorRg(rg);
     }
 }
