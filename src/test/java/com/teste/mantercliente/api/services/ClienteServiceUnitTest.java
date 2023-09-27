@@ -4,10 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -198,5 +204,79 @@ public class ClienteServiceUnitTest {
 
         // Verificando se o resultado é um Optional vazio
         assertFalse(resultado.isPresent());
+    }
+    
+    @Test
+    public void testDeleteClientePresente() {
+        Long clienteId = 1L;
+        Cliente cliente = new Cliente(clienteId, "Nome do Cliente", "123456789");
+
+        // Executando o método sob teste
+        clienteService.delete(Optional.of(cliente));
+
+        // Verificando se o método delete foi chamado com o cliente correto
+        verify(clienteRepository).delete(cliente);
+    }
+
+    @Test
+    public void testDeleteClienteAusente() {
+        Long clienteId = 2L;
+
+        // Executando o método sob teste
+        clienteService.delete(Optional.empty());
+
+        // Verificando que o método delete não foi chamado
+        verify(clienteRepository, never()).delete(any());
+    }
+    
+
+    @Test
+    public void testFindAllClientes() {
+        // Criar uma lista de Clientes fictícia para simular o retorno do repositório
+        List<Cliente> clientes = new ArrayList<>();
+        clientes.add(new Cliente(1L, "Cliente 1", "123456"));
+        clientes.add(new Cliente(2L, "Cliente 2", "789012"));
+
+        // Configurando o comportamento simulado do repositório
+        when(clienteRepository.findAll()).thenReturn(clientes);
+
+        // Chamando o método sob teste
+        List<Cliente> resultado = clienteService.findAll();
+
+        // Verificando se o método do repositório foi chamado
+        verify(clienteRepository, times(1)).findAll();
+
+        // Verificando se o resultado é igual à lista simulada
+        assertEquals(clientes, resultado);
+    }
+    
+    @Test
+    public void testFindAllClientesJDBC() {
+        List<Cliente> clientes = new ArrayList<>();
+        clientes.add(new Cliente(1L, "Cliente 1", "123456"));
+        clientes.add(new Cliente(2L, "Cliente 2", "789012"));
+
+        // Configurando o comportamento simulado do repositório JDBC
+        when(clienteRepositoryJDBC.findAllJDBC()).thenReturn(clientes);
+
+        // When (Quando)
+        List<Cliente> resultado = clienteService.findAllJDBC();
+
+        // Then (Então)
+        // Verificando se o método do repositório JDBC foi chamado
+        verify(clienteRepositoryJDBC, times(1)).findAllJDBC();
+
+        // Verificando se o resultado não está vazio
+        assertFalse(resultado.isEmpty());
+
+        // Verificando se o tamanho do resultado é igual ao tamanho da lista fictícia
+        assertEquals(clientes.size(), resultado.size());
+
+        // Verificando se os dados dos clientes correspondem à lista fictícia
+        IntStream.range(0, clientes.size()).forEach(i -> {
+            assertEquals(clientes.get(i).getId(), resultado.get(i).getId());
+            assertEquals(clientes.get(i).getNome(), resultado.get(i).getNome());
+            assertEquals(clientes.get(i).getRg(), resultado.get(i).getRg());
+        });
     }
 }
