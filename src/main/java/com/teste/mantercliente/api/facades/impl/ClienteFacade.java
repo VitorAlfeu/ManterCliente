@@ -20,12 +20,22 @@ import com.teste.mantercliente.api.services.IClienteService;
 
 import io.micrometer.common.util.StringUtils;
 
+/**
+ * Implementação da interface IClienteFacade que fornece métodos para manipular clientes.
+ */
 @Service
 public class ClienteFacade implements IClienteFacade {
 	
 	@Autowired
 	private IClienteService clienteService;
 	
+	/**
+	 * Cadastra ou atualiza um cliente.
+	 * 
+	 * @param clienteDTO O DTO contendo as informações do cliente a ser cadastrado ou atualizado.
+	 * @param result      O resultado da validação do DTO.
+	 * @return O DTO do cliente cadastrado ou atualizado.
+	 */
 	public ClienteDTO manterCliente(ClienteDTO clienteDTO, BindingResult result) {
 		
 		if (clienteDTO.getId() != 0) {
@@ -76,6 +86,12 @@ public class ClienteFacade implements IClienteFacade {
 		}
 	}
 
+	/**
+	 * Exclui um cliente por ID.
+	 * 
+	 * @param id O ID do cliente a ser excluído.
+	 * @return Um ResponseEntity com o resultado da operação.
+	 */
 	public ResponseEntity<String> excluirCliente(long id) {
 		try {
 			Optional<Cliente> cliente = clienteService.findById(id); 
@@ -89,6 +105,11 @@ public class ClienteFacade implements IClienteFacade {
 		}
 	}
 
+	/**
+	 * Retorna a lista de todos os clientes.
+	 * 
+	 * @return Uma lista de objetos ClienteDTO representando todos os clientes.
+	 */
 	public List<ClienteDTO> buscarTodosClientes() {
 		List<Cliente> lstCliente = clienteService.findAll();
 		List<ClienteDTO> lstClienteDTO = new ArrayList<>();
@@ -98,6 +119,11 @@ public class ClienteFacade implements IClienteFacade {
 		return lstClienteDTO;
 	}
 	
+	/**
+	 * Retorna a lista de todos os clientes usando JDBC.
+	 * 
+	 * @return Uma lista de objetos ClienteDTO representando todos os clientes.
+	 */
 	public List<ClienteDTO> buscarTodosClientesJDBC() {
 		List<Cliente> lstCliente = clienteService.findAllJDBC();
 		List<ClienteDTO> lstClienteDTO = new ArrayList<>();
@@ -107,6 +133,12 @@ public class ClienteFacade implements IClienteFacade {
 		return lstClienteDTO;
 	}
 
+	/**
+	 * Busca um cliente por ID.
+	 * 
+	 * @param id O ID do cliente a ser buscado.
+	 * @return Um ResponseEntity com o resultado da operação.
+	 */
 	public ResponseEntity<Response<ClienteDTO>> buscarClientePorId(String id) {
 		Response<ClienteDTO> response = new Response<>();
 		Optional<Cliente> cliente = clienteService.findById(Long.parseLong(id));
@@ -123,6 +155,12 @@ public class ClienteFacade implements IClienteFacade {
 		return ResponseEntity.ok(response);
 	}
 	
+	/**
+	 * Busca um cliente por nome.
+	 * 
+	 * @param nome O nome do cliente a ser buscado.
+	 * @return Um ResponseEntity com o resultado da operação.
+	 */
 	public ResponseEntity<Response<ClienteDTO>> buscarClientePorNome(String nome){
 		Response<ClienteDTO> response = new Response<>();
 		Optional<Cliente> cliente = clienteService.findByNome(nome);
@@ -139,6 +177,12 @@ public class ClienteFacade implements IClienteFacade {
 		return ResponseEntity.ok(response);
 	}
 	
+	/**
+	 * Busca um cliente por RG.
+	 * 
+	 * @param rg O RG do cliente a ser buscado.
+	 * @return Um ResponseEntity com o resultado da operação.
+	 */
 	public ResponseEntity<Response<ClienteDTO>> buscarClientePorRg(String rg){
 		Response<ClienteDTO> response = new Response<>();
 		Optional<Cliente> cliente = clienteService.findByRg(rg);
