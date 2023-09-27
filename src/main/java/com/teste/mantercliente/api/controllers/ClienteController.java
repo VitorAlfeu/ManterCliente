@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,13 @@ public class ClienteController {
 	@PutMapping
 	public ResponseEntity<Response<ClienteDTO>> atualizarCliente(@RequestBody ClienteDTO clienteDTO, BindingResult result) throws ParseException {
 		Response<ClienteDTO> response = new Response<ClienteDTO>();
+		
+		if (clienteDTO.getId() == 0) {
+			result.addError(new ObjectError("cliente", String.format("Para a Atualização de um Cliente o id não pode ser vazio ou igual à 0.")));
+			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+		
 		ClienteDTO retorno = clienteFacade.manterCliente(clienteDTO, result); 
 
 		if (result.hasErrors()) {
