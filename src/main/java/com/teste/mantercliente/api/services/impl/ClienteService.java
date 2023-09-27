@@ -13,54 +13,103 @@ import com.teste.mantercliente.api.repositories.IClienteRepository;
 import com.teste.mantercliente.api.repositories.IClienteRepositoryJDBC;
 import com.teste.mantercliente.api.services.IClienteService;
 
+/**
+ * Implementação da interface IClienteService que fornece serviços relacionados aos clientes.
+ */
 @Service
-public class ClienteService implements IClienteService{
-	
-	private static final Logger log = LoggerFactory.getLogger(ClienteService.class);
-	
-	@Autowired
-	IClienteRepository clienteRepository;
-	
-	@Autowired
-	IClienteRepositoryJDBC clienteReposirotyJDBC;
-	
-	public Cliente manterCliente (Cliente cliente) {
-		log.info("Cadastrando/Atualizando Cliente...");
-		return this.clienteRepository.save(cliente);
-	}
+public class ClienteService implements IClienteService {
+    
+    private static final Logger log = LoggerFactory.getLogger(ClienteService.class);
+    
+    @Autowired
+    IClienteRepository clienteRepository;
+    
+    @Autowired
+    IClienteRepositoryJDBC clienteReposirotyJDBC;
+    
+    /**
+     * Cadastra ou atualiza um cliente.
+     *
+     * @param cliente O objeto Cliente a ser cadastrado ou atualizado.
+     * @return O cliente após o cadastro ou atualização.
+     */
+    public Cliente manterCliente(Cliente cliente) {
+        log.info("Cadastrando/Atualizando Cliente...");
+        return this.clienteRepository.save(cliente);
+    }
 
-	public Optional<Cliente> findById(long id) {
-		log.info("Buscando Cliente por Id...");
-		return this.clienteRepository.findById(id);
-	}
-	
-	public Optional<Cliente> findByNome(String nome){
-		log.info("Buscando Cliente por Nome...");
-		return this.clienteRepository.findByNome(nome);
-	}
-	
-	public Optional<Cliente> findByRg(String rg){
-		log.info("Buscando Cliente por Rg...");
-		return this.clienteRepository.findByRg(rg);	
-	}
-	
-	public Optional<Cliente> findByNomeAndRg(String nome, String rg){
-		log.info("Buscando Cliente por Nome e Rg...");
-		return this.clienteRepository.findByNomeAndRg(nome, rg);
-	}
+    /**
+     * Busca um cliente pelo seu ID.
+     *
+     * @param id O ID do cliente a ser buscado.
+     * @return Um Optional contendo o cliente encontrado ou vazio se não encontrado.
+     */
+    public Optional<Cliente> findById(long id) {
+        log.info("Buscando Cliente por Id...");
+        return this.clienteRepository.findById(id);
+    }
+    
+    /**
+     * Busca um cliente pelo seu nome.
+     *
+     * @param nome O nome do cliente a ser buscado.
+     * @return Um Optional contendo o cliente encontrado ou vazio se não encontrado.
+     */
+    public Optional<Cliente> findByNome(String nome){
+        log.info("Buscando Cliente por Nome...");
+        return this.clienteRepository.findByNome(nome);
+    }
+    
+    /**
+     * Busca um cliente pelo seu RG.
+     *
+     * @param rg O RG do cliente a ser buscado.
+     * @return Um Optional contendo o cliente encontrado ou vazio se não encontrado.
+     */
+    public Optional<Cliente> findByRg(String rg){
+        log.info("Buscando Cliente por Rg...");
+        return this.clienteRepository.findByRg(rg);	
+    }
+    
+    /**
+     * Busca um cliente pelo nome e RG.
+     *
+     * @param nome O nome do cliente a ser buscado.
+     * @param rg   O RG do cliente a ser buscado.
+     * @return Um Optional contendo o cliente encontrado ou vazio se não encontrado.
+     */
+    public Optional<Cliente> findByNomeAndRg(String nome, String rg){
+        log.info("Buscando Cliente por Nome e Rg...");
+        return this.clienteRepository.findByNomeAndRg(nome, rg);
+    }
 
-	public void delete(Optional<Cliente> cliente) {
-		log.info("Excluindo Usuário por Id...");
-		cliente.ifPresent(u -> this.clienteRepository.delete(u));
-	}
+    /**
+     * Exclui um cliente.
+     *
+     * @param cliente O cliente a ser excluído.
+     */
+    public void delete(Optional<Cliente> cliente) {
+        log.info("Excluindo Usuário por Id...");
+        cliente.ifPresent(c -> this.clienteRepository.delete(c));
+    }
 
-	public List<Cliente> findAll() {
-		log.info("Buscando todos os Clientes...");
-		return this.clienteRepository.findAll();
-	}
-	
-	public List<Cliente> findAllJDBC(){
-		log.info("Buscando todos os Clientes com JDBC Template...");
-		return this.clienteReposirotyJDBC.findAllJDBC();	
-	}
+    /**
+     * Retorna uma lista de todos os clientes.
+     *
+     * @return Uma lista de objetos Cliente.
+     */
+    public List<Cliente> findAll() {
+        log.info("Buscando todos os Clientes...");
+        return this.clienteRepository.findAll();
+    }
+    
+    /**
+     * Retorna uma lista de todos os clientes usando o JDBC Template.
+     *
+     * @return Uma lista de objetos Cliente.
+     */
+    public List<Cliente> findAllJDBC(){
+        log.info("Buscando todos os Clientes com JDBC Template...");
+        return this.clienteReposirotyJDBC.findAllJDBC();	
+    }
 }
