@@ -3,6 +3,7 @@ package com.teste.mantercliente.api.facades.impl;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,6 @@ import io.micrometer.common.util.StringUtils;
 @Service
 public class ClienteFacade implements IClienteFacade {
 	
-	//private static final Logger log = LoggerFactory.getLogger(ClienteFacade.class);
-
 	@Autowired
 	private IClienteService clienteService;
 	
@@ -61,10 +60,17 @@ public class ClienteFacade implements IClienteFacade {
 		
 		if (StringUtils.isBlank(clienteDTO.getRg())) {
 			result.addError(new ObjectError("cliente", String.format("O RG do Cliente não pode ser Vazio")));	
+		} else {
+			Optional<Cliente> clienteValidaRG = clienteService.findByRg(clienteDTO.getRg()); // Verificando se já existe algum Cliente com este RG
+			if ((clienteValidaRG.isPresent()) 
+					&& ((clienteDTO.getId() == 0) 
+							|| (clienteValidaRG.get().getId() != clienteDTO.getId()))) { // Existindo alguém com o RG em questão, validando se está inserindo um Cliente novo e Verifica 
+				result.addError(new ObjectError("cliente", String.format("O RG: " + clienteDTO.getRg() + " é único e já pertence ao Cliente: '" + clienteValidaRG.get().getNome() + "'")));
+			}
 		}
 		
 		Optional<Cliente> retorno = clienteService.findByNomeAndRg(clienteDTO.getNome(), clienteDTO.getRg());
-		if (retorno.isPresent()) {
+		if ((retorno.isPresent()) && (clienteDTO.getId() != retorno.get().getId())) {
 			result.addError(new ObjectError("cliente", String.format("Já existe um Cliente com o Nome: '" + clienteDTO.getNome() + "' e com o RG: '" + clienteDTO.getRg() + "'")));
 			return;	
 		}
